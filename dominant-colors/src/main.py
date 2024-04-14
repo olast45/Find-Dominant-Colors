@@ -7,6 +7,7 @@ from typing import List, Tuple
 from scipy.cluster.vq import whiten
 from sklearn.cluster import KMeans
 
+K_VALUE = 5
 
 def extract_RGB_values(image_name: str) -> Tuple[List[float], List[float], List[float]]:
     image = img.imread(f'images/{image_name}')
@@ -69,7 +70,7 @@ def display_dominant_colors(k: int, dataframe: pd.DataFrame, rgb: List) -> None:
     plt.imshow([colors])
     plt.show()
 
-def pipeline(k: int, image_name: str) -> None:
+def pipeline(image_name: str, k=K_VALUE) -> None:
     red, green, blue = extract_RGB_values(image_name)
     scaled_red, scaled_green, scaled_blue = standardize_RGB_values(red, green, blue)
     rgb_dataframe = create_dataframe(scaled_red, scaled_green, scaled_blue)
@@ -77,5 +78,5 @@ def pipeline(k: int, image_name: str) -> None:
 
 
 if __name__ == "__main__":
-    pipeline(3, "example.jpg")
+    pipeline("example.jpg")
 
