@@ -27,7 +27,7 @@ Follow the instructions given here - https://python-poetry.org
 4. Navigate to the project directory:
 
 ```shell
-    cd astepien-deathapp
+    cd Find-Dominant-Colors
 ```
 
 5. Install the required dependencies using Poetry by typing:
