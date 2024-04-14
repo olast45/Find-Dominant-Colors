@@ -10,7 +10,7 @@ from sklearn.cluster import KMeans
 K_VALUE = 5
 
 def extract_RGB_values(image_name: str) -> Tuple[List[float], List[float], List[float]]:
-    image = img.imread(f'images/{image_name}')
+    image = img.imread(image_name)
     r = []
     g = []
     b = []
@@ -67,8 +67,14 @@ def display_dominant_colors(k: int, dataframe: pd.DataFrame, rgb: List) -> None:
 
 
     # Display the colors of cluster centers
-    plt.imshow([colors])
-    plt.show()
+    plt.figure(figsize=(6, 2))
+    plt.imshow([colors], aspect='auto')
+    plt.axis('off')  # Turn off axis
+    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)  # Adjust subplot to image boundaries
+    plt.margins(0, 0)  # No margins
+    plt.gca().xaxis.set_major_locator(plt.NullLocator())  # No ticks
+    plt.gca().yaxis.set_major_locator(plt.NullLocator())
+    plt.savefig('dominant_colors.png', bbox_inches='tight', pad_inches=0)  # Save the image
 
 def pipeline(image_name: str, k=K_VALUE) -> None:
     red, green, blue = extract_RGB_values(image_name)
@@ -77,6 +83,5 @@ def pipeline(image_name: str, k=K_VALUE) -> None:
     display_dominant_colors(k, rgb_dataframe, [red, green, blue])
 
 
-if __name__ == "__main__":
-    pipeline("example.jpg")
+
 
