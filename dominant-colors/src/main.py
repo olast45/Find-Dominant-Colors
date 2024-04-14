@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from matplotlib import image as img
 from typing import List, Tuple
@@ -61,4 +62,28 @@ def find_optimal_k(dataframe: pd.DataFrame) -> int:
 
     return best_k
 
+def display_dominant_colors(k: int, dataframe: pd.DataFrame) -> None:
+    k_means = KMeans(n_clusters=k)
+    k_means.fit(dataframe)
+
+    # Retrieve the cluster centers
+    cluster_centers = k_means.cluster_centers_
+
+    # Get standard deviations of each color
+    r_std, g_std, b_std = dataframe.std()
+
+    # Scale the cluster centers' RGB values
+    colors = []
+    for cluster_center in cluster_centers:
+        scaled_r, scaled_g, scaled_b = cluster_center
+        # Convert each standardized value to scaled value
+        colors.append((
+            scaled_r * r_std / 255,
+            scaled_g * g_std / 255,
+            scaled_b * b_std / 255
+        ))
+
+    # Display the colors of cluster centers
+    plt.imshow([colors])
+    plt.show()
 
