@@ -1,6 +1,9 @@
+import pandas as pd
+
 from matplotlib import image as img
 from typing import List, Tuple
 from scipy.cluster.vq import whiten
+
 
 def extract_RGB_values(image_name: str) -> Tuple[List[float], List[float], List[float]]:
     image = img.imread(f'images/{image_name}')
@@ -23,5 +26,15 @@ def standardize_RGB_values(r: List, g: List, b: List) -> Tuple[List[float], List
     scaled_b = whiten(b)
 
     return scaled_r, scaled_g, scaled_b
+
+def create_dataframe(r: List, g: List, b: List) -> pd.DataFrame:
+    dataframe = pd.DataFrame({
+        "scaled_R" : r,
+        "scaled_G" : g,
+        "scaled_B" : b
+    })
+
+    return dataframe
+
 
 
