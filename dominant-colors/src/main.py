@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 from matplotlib import image as img
 from typing import List, Tuple
@@ -39,7 +40,7 @@ def create_dataframe(r: List, g: List, b: List) -> pd.DataFrame:
     return dataframe
 
 
-def display_dominant_colors(k: int, dataframe: pd.DataFrame) -> None:
+def display_dominant_colors(k: int, dataframe: pd.DataFrame, rgb: List) -> None:
     k_means = KMeans(n_clusters=k)
     k_means.fit(dataframe)
 
@@ -47,7 +48,10 @@ def display_dominant_colors(k: int, dataframe: pd.DataFrame) -> None:
     cluster_centers = k_means.cluster_centers_
 
     # Get standard deviations of each color
-    r_std, g_std, b_std = dataframe.std()
+    r_std = np.array(rgb[0]).std()
+    g_std = np.array(rgb[1]).std()
+    b_std = np.array(rgb[2]).std()
+
 
     # Scale the cluster centers' RGB values
     colors = []
@@ -60,19 +64,18 @@ def display_dominant_colors(k: int, dataframe: pd.DataFrame) -> None:
             scaled_b * b_std / 255
         ))
 
-    print("Colors:", colors)
 
     # Display the colors of cluster centers
     plt.imshow([colors])
     plt.show()
 
-def pipeline(k:int, image_name: str) -> None:
+def pipeline(k: int, image_name: str) -> None:
     red, green, blue = extract_RGB_values(image_name)
     scaled_red, scaled_green, scaled_blue = standardize_RGB_values(red, green, blue)
     rgb_dataframe = create_dataframe(scaled_red, scaled_green, scaled_blue)
-    display_dominant_colors(k, rgb_dataframe)
+    display_dominant_colors(k, rgb_dataframe, [red, green, blue])
 
 
 if __name__ == "__main__":
-    pipeline(2, "example.jpg")
+    pipeline(3, "example.jpg")
 
