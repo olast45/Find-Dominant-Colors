@@ -1,18 +1,23 @@
 import streamlit as st
-
-from src.main import pipeline
 from PIL import Image
 
+from src.main import pipeline
 
-# Example images
-example_images = {
+# Define paths to example images
+EXAMPLE_IMAGE_PATHS = {
     "Tiger": "dominant-colors/images/tiger.jpg",
     "Flowers": "dominant-colors/images/flowers.jpeg",
     "Mountains": "dominant-colors/images/mountains.jpeg"
 }
 
-if __name__ == "__main__":
+# Function to display the dominant colors pipeline
+def display_dominant_colors(image, image_path):
+    st.image(image, use_column_width=True)
+    pipeline(image, image_path)
+    st.image('dominant_colors.png', caption='Dominant Colors', use_column_width=True)
 
+def main():
+    # Streamlit setup
     st.title("Display Dominant Colors")
     st.markdown("""
         <style>
@@ -22,19 +27,19 @@ if __name__ == "__main__":
         </style>
         """, unsafe_allow_html=True)
 
+    # Sidebar setup
     st.sidebar.title("Upload a picture")
+    
+    # File uploader for user-uploaded images
     uploaded_file = st.sidebar.file_uploader("Upload your own image", type=["jpg", "webp", "jpeg"])
     if uploaded_file is not None:
-        st.image(uploaded_file, use_column_width=True)
-        pipeline(uploaded_file)
-        st.image('dominant_colors.png', caption='Dominant Colors', use_column_width=True)
+        display_dominant_colors(uploaded_file, uploaded_file)
 
-    # Sidebar selectbox for choosing example images
-    selected_image = st.sidebar.selectbox("Or choose a sample image:", list(example_images.keys()))
-
-    # Load selected example image
+    # Selectbox for example images
+    selected_image = st.sidebar.selectbox("Or choose a sample image:", list(EXAMPLE_IMAGE_PATHS.keys()))
     if selected_image:
-        image = Image.open(example_images[selected_image])
-        st.image(image, use_column_width=True)
-        pipeline(example_images[selected_image])
-        st.image('dominant_colors.png', caption='Dominant Colors', use_column_width=True)
+        image = Image.open(EXAMPLE_IMAGE_PATHS[selected_image])
+        display_dominant_colors(image, EXAMPLE_IMAGE_PATHS[selected_image])
+
+if __name__ == "__main__":
+    main()
