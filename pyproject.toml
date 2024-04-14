@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "src"
+name = "dominant-colors"
 version = "0.1.0"
 description = ""
 authors = ["olast45"]
@@ -7,6 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+matplotlib = "^3.8.4"
 
 
 [build-system]
