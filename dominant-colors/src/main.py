@@ -3,6 +3,8 @@ import pandas as pd
 from matplotlib import image as img
 from typing import List, Tuple
 from scipy.cluster.vq import whiten
+from sklearn.metrics import silhouette_score
+from sklearn.cluster import KMeans
 
 
 def extract_RGB_values(image_name: str) -> Tuple[List[float], List[float], List[float]]:
@@ -36,5 +38,27 @@ def create_dataframe(r: List, g: List, b: List) -> pd.DataFrame:
 
     return dataframe
 
+def find_optimal_k(dataframe: pd.DataFrame) -> int:
+    k_values = range(2, 10)
+    silhouette_scores = []
+
+    best_k = None
+    best_silhouette_score = -1
+
+    # Iterate through different K values
+    for k in k_values:
+        k_means = KMeans(n_clusters=k, init='k-means++', n_init=10, max_iter=100, random_state=42)
+        k_means.fit(dataframe)
+        
+        # Calculate the average silhouette score
+        silhouette_avg = silhouette_score(dataframe, k_means.labels_)  
+        silhouette_scores.append(silhouette_avg)
+        
+        # Update the best K value if a higher silhouette score is found
+        if silhouette_avg > best_silhouette_score:
+            best_k = k
+            best_silhouette_score = silhouette_avg
+
+    return best_k
 
 
