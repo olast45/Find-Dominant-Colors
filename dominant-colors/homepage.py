@@ -1,5 +1,6 @@
 import streamlit as st
 from PIL import Image
+import os
 
 from src.main import pipeline
 
@@ -13,10 +14,11 @@ EXAMPLE_IMAGE_PATHS = {
 # Function to display the dominant colors pipeline
 def display_dominant_colors(image, image_path):
     st.image(image, use_column_width=True)
-    pipeline(image, image_path)
+    pipeline(image_path)
     st.image('dominant_colors.png', caption='Dominant Colors', use_column_width=True)
 
 def main():
+
     # Streamlit setup
     st.title("Display Dominant Colors")
     st.markdown("""
@@ -32,14 +34,21 @@ def main():
     
     # File uploader for user-uploaded images
     uploaded_file = st.sidebar.file_uploader("Upload your own image", type=["jpg", "webp", "jpeg"])
-    if uploaded_file is not None:
-        display_dominant_colors(uploaded_file, uploaded_file)
 
     # Selectbox for example images
     selected_image = st.sidebar.selectbox("Or choose a sample image:", list(EXAMPLE_IMAGE_PATHS.keys()))
-    if selected_image:
-        image = Image.open(EXAMPLE_IMAGE_PATHS[selected_image])
-        display_dominant_colors(image, EXAMPLE_IMAGE_PATHS[selected_image])
+    use_sample_images = st.sidebar.checkbox("Use sample image", value=False)
+
+    if uploaded_file is not None and use_sample_images is True:
+        st.warning('Please remove the uploaded photo or deselect the "Use sample image" checkbox')
+    elif uploaded_file is not None and use_sample_images is False:
+        # Process the uploaded file
+        display_dominant_colors(uploaded_file, uploaded_file)
+    elif use_sample_images is True:
+        # Process the selected example image
+        image_path = EXAMPLE_IMAGE_PATHS[selected_image]
+        image = Image.open(image_path)
+        display_dominant_colors(image, image_path)
 
 if __name__ == "__main__":
     main()
