@@ -2,15 +2,24 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-from matplotlib import image as img
 from typing import List, Tuple
 from scipy.cluster.vq import whiten
 from sklearn.cluster import KMeans
+from PIL import Image
 
 K_VALUE = 5
+WIDTH = 250
+HEIGHT = 250
 
 def extract_RGB_values(image_name: str) -> Tuple[List[float], List[float], List[float]]:
-    image = img.imread(image_name)
+    img = Image.open(image_name)
+    
+    # Resize the image for better performance
+    resized_img = img.resize((WIDTH, HEIGHT))
+    
+    # Convert the resized image to a numpy array
+    image = np.array(resized_img)
+    
     r = []
     g = []
     b = []
